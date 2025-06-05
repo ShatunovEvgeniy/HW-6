@@ -170,6 +170,7 @@ class GameState:
             self.playery / SCREENHEIGHT,  # Normalized Y-position
             self.playerVelY / self.playerMaxVelY,  # Normalized velocity
             bird_y_center / SCREENHEIGHT,  # Bird center position
+            self.playerRot / 360,  # Bird's rotation
 
             # Pipe entry information
             dist_to_pipe_entry / SCREENWIDTH,  # Distance to pipe entry
