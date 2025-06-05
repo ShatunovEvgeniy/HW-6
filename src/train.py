@@ -11,7 +11,7 @@ from src.model.dqn_agent import DQNAgent
 from src.model.hparams import config
 
 # Set up logger
-logger = setup_logger("Train", level=logging.DEBUG)
+logger = setup_logger("Train", level=logging.INFO)
 
 # Find root path
 ROOT_PATH = Path(__file__).parent.parent
@@ -46,6 +46,8 @@ def train(total_episodes: int = 1000,
     weights_folder = ROOT_PATH / "model"
     os.makedirs(weights_folder, exist_ok=True)
 
+    mean_score = 0
+    total_score = 0
     for episode in range(total_episodes):
         state = session.get_state()
         total_reward = 0
@@ -60,21 +62,22 @@ def train(total_episodes: int = 1000,
             _, reward, done = session.frame_step(action_onehot, render=render)
             next_state = session.get_state()
 
-            # Add penalty for being too high
-            if session.playery < 50:  # Very close to top
-                reward -= 500 * agent.epsilon
+            if mean_score < 0:
+                # Add penalty for being too high
+                if session.playery < 50:  # Very close to top
+                    reward -= 1
 
-            # Add penalty for not approaching pipes
-            pipe_x_diff = session.upperPipes[0]["x"] - session.playerx
-            if pipe_x_diff < 50 and abs(session.playery - 200) > 100:
-                reward -= 400 * agent.epsilon
+                # Add penalty for not approaching pipes
+                pipe_x_diff = session.upperPipes[0]["x"] - session.playerx
+                if pipe_x_diff < 50 and abs(session.playery - 200) > 100:
+                    reward -= 1
 
-            # Add reward for proper alignment
-            bird_center = session.playery + PLAYER_HEIGHT / 2
-            gap_top = session.upperPipes[0]["y"] + PIPE_HEIGHT
-            gap_center = gap_top + PIPEGAPSIZE / 2
-            if pipe_x_diff < 100 and abs(bird_center - gap_center) < 30:
-                reward += 500 * agent.epsilon
+                # Add reward for proper alignment
+                bird_center = session.playery + PLAYER_HEIGHT / 2
+                gap_top = session.upperPipes[0]["y"] + PIPE_HEIGHT
+                gap_center = gap_top + PIPEGAPSIZE / 2
+                if pipe_x_diff < 100 and abs(bird_center - gap_center) < 30:
+                    reward += 1
 
             # Store experience
             agent.remember(state, action, reward, next_state, done)
@@ -97,10 +100,11 @@ def train(total_episodes: int = 1000,
                 break
 
         # Print episode summary
-        logger.info(f"Episode {episode + 1}: Score={score} Reward={total_reward:.1f} Epsilon={agent.epsilon:.4f}")
+        logger.debug(f"Episode {episode + 1}: Score={score} Reward={total_reward:.1f} Epsilon={agent.epsilon:.4f}")
         if use_wandb:
             model_state = dict(
                 score = score,
+                mean_score = mean_score,
                 reward = total_reward,
                 epsilon = agent.epsilon,
                 loss = total_loss / step,
@@ -115,10 +119,16 @@ def train(total_episodes: int = 1000,
         # Reset the game properly
         session = GameState()
 
+        total_score += score
+        mean_score = total_score / (episode + 1)
+
 
 if __name__ == "__main__":
-    use_wandb = False
+    use_wandb = True
+    render = False
     if use_wandb:
         wandb.init(project="ml-homework-6",
-                   name=f"gamma={config["gamma"]}, eps_decay={config["epsilon_decay"]}")
-    train(use_wandb=use_wandb, render=True)
+                   name=f"A lot of parameters")
+    train(total_episodes=500000,
+          use_wandb=use_wandb,
+          render=render)
