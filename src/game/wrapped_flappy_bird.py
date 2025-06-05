@@ -60,7 +60,7 @@ class GameState:
         self.playerVelRot = 3  # angular speed
         self.playerRotThr = 20  # rotation threshold
 
-    def frame_step(self, input_actions):
+    def frame_step(self, input_actions, render=True):
         pygame.event.pump()
 
         reward = 0.1  # FIXME придумайте стратегию награды/наказания
@@ -129,27 +129,31 @@ class GameState:
             self.__init__()
             reward = -1  # FIXME придумайте стратегию награды/наказания
 
-        # draw sprites
-        SCREEN.blit(IMAGES["background"], (0, 0))
+        if render:
+            # draw sprites
+            SCREEN.blit(IMAGES["background"], (0, 0))
 
-        for uPipe, lPipe in zip(self.upperPipes, self.lowerPipes):
-            SCREEN.blit(IMAGES["pipe"][0], (uPipe["x"], uPipe["y"]))
-            SCREEN.blit(IMAGES["pipe"][1], (lPipe["x"], lPipe["y"]))
+            for uPipe, lPipe in zip(self.upperPipes, self.lowerPipes):
+                SCREEN.blit(IMAGES["pipe"][0], (uPipe["x"], uPipe["y"]))
+                SCREEN.blit(IMAGES["pipe"][1], (lPipe["x"], lPipe["y"]))
 
-        SCREEN.blit(IMAGES["base"], (self.basex, BASEY))
-        # Player rotation has a threshold
-        visibleRot = self.playerRotThr
-        if self.playerRot <= self.playerRotThr:
-            visibleRot = self.playerRot
-        playerSurface = pygame.transform.rotate(IMAGES["player"][self.playerIndex], visibleRot)
-        SCREEN.blit(playerSurface, (self.playerx, self.playery))
+            SCREEN.blit(IMAGES["base"], (self.basex, BASEY))
+            # Player rotation has a threshold
+            visibleRot = self.playerRotThr
+            if self.playerRot <= self.playerRotThr:
+                visibleRot = self.playerRot
+            playerSurface = pygame.transform.rotate(IMAGES["player"][self.playerIndex], visibleRot)
+            SCREEN.blit(playerSurface, (self.playerx, self.playery))
 
-        image_data = pygame.surfarray.array3d(pygame.display.get_surface())
-        showScore(self.score)
-        pygame.display.update()
-        FPSCLOCK.tick(FPS)
+            image_data = pygame.surfarray.array3d(pygame.display.get_surface())
+            showScore(self.score)
+            pygame.display.update()
+            FPSCLOCK.tick(FPS)
 
-        return image_data, reward, terminal
+            return image_data, reward, terminal
+
+        else:
+            return None, reward, terminal
 
     def get_state(self):
         """State representation"""
