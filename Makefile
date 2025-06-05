@@ -11,3 +11,9 @@ lint:
 
 hooks:
 	poetry run pre-commit install --install-hooks
+
+train:
+    python src/train.py
+
+inference:
+    python src/inference.py
