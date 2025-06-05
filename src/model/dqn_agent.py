@@ -6,8 +6,10 @@ import torch.optim as optim
 import torch.nn.functional as F
 from collections import deque
 
-# Set device for computation (GPU if available)
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+from src.utils.device import setup_device
+
+# Set device for computation
+device = setup_device()
 
 
 class DQN(nn.Module):

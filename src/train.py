@@ -5,6 +5,7 @@ import torch
 
 from src.game.wrapped_flappy_bird import GameState, PLAYER_HEIGHT, PIPE_HEIGHT, PIPEGAPSIZE
 from src.utils.logger import setup_logger
+from src.utils.device import setup_device
 from src.model.dqn_agent import DQNAgent
 
 # Set up logger
@@ -14,8 +15,8 @@ logger = setup_logger("Train", level=logging.DEBUG)
 ROOT_PATH = Path(__file__).parent.parent
 logger.debug(f"Project root: {ROOT_PATH}")
 
-# Set device for computation (GPU if available)
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# Set device for computation
+device = setup_device()
 logger.info(device)
 
 
