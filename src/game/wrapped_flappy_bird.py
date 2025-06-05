@@ -63,7 +63,7 @@ class GameState:
     def frame_step(self, input_actions, render=True):
         pygame.event.pump()
 
-        reward = 0.1  # FIXME придумайте стратегию награды/наказания
+        reward = 1  # FIXME придумайте стратегию награды/наказания
         terminal = False
 
         if sum(input_actions) != 1:
@@ -82,7 +82,7 @@ class GameState:
             pipeMidPos = pipe["x"] + PIPE_WIDTH / 2
             if pipeMidPos <= playerMidPos < pipeMidPos + 4:
                 self.score += 1
-                reward = 1  # FIXME придумайте стратегию награды/наказания
+                reward = 10  # FIXME придумайте стратегию награды/наказания
 
         # playerIndex basex change
         if (self.loopIter + 1) % 3 == 0:
@@ -127,7 +127,7 @@ class GameState:
         if isCrash:
             terminal = True
             self.__init__()
-            reward = -1  # FIXME придумайте стратегию награды/наказания
+            reward = -10  # FIXME придумайте стратегию награды/наказания
 
         if render:
             # draw sprites
