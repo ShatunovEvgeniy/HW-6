@@ -77,7 +77,7 @@ def inference(model_path: Path, output_folder: Path):
 
 if __name__ == "__main__":
     # Setup paths
-    model_path = ROOT_PATH / "model" / "lappy_fixed_ep_1000.pth"
+    model_path = ROOT_PATH / "model" / "lappy_fixed_ep_49800.pth"
     output_folder = ROOT_PATH / "videos"
     os.makedirs(output_folder, exist_ok=True)
 
