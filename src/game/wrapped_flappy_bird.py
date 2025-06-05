@@ -144,9 +144,9 @@ class GameState:
                 visibleRot = self.playerRot
             playerSurface = pygame.transform.rotate(IMAGES["player"][self.playerIndex], visibleRot)
             SCREEN.blit(playerSurface, (self.playerx, self.playery))
+            showScore(self.score)
 
             image_data = pygame.surfarray.array3d(pygame.display.get_surface())
-            showScore(self.score)
             pygame.display.update()
             FPSCLOCK.tick(FPS)
 
