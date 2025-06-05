@@ -1,71 +1,73 @@
 import random
-
+from pathlib import Path
 import pygame
+
+SPRITES_PATH = Path(__file__).parent.parent.parent / "assets" / "sprites"
 
 # list of all possible players (tuple of 3 positions of flap)
 PLAYERS_LIST = (
     # red bird
     (
-        "assets/sprites/redbird-upflap.png",
-        "assets/sprites/redbird-midflap.png",
-        "assets/sprites/redbird-downflap.png",
+        str(SPRITES_PATH / "redbird-upflap.png"),
+        str(SPRITES_PATH / "redbird-midflap.png"),
+        str(SPRITES_PATH / "redbird-downflap.png"),
     ),
     # blue bird
     (
-        "assets/sprites/bluebird-upflap.png",
-        "assets/sprites/bluebird-midflap.png",
-        "assets/sprites/bluebird-downflap.png",
+        str(SPRITES_PATH / "bluebird-upflap.png"),
+        str(SPRITES_PATH / "bluebird-midflap.png"),
+        str(SPRITES_PATH / "bluebird-downflap.png"),
     ),
     # yellow bird
     (
-        "assets/sprites/yellowbird-upflap.png",
-        "assets/sprites/yellowbird-midflap.png",
-        "assets/sprites/yellowbird-downflap.png",
+        str(SPRITES_PATH / "yellowbird-upflap.png"),
+        str(SPRITES_PATH / "yellowbird-midflap.png"),
+        str(SPRITES_PATH / "yellowbird-downflap.png"),
     ),
 )
 
 # list of backgrounds
 BACKGROUNDS_LIST = (
-    "assets/sprites/background-day.png",
-    "assets/sprites/background-night.png",
+    str(SPRITES_PATH / "background-day.png"),
+    str(SPRITES_PATH / "background-night.png"),
 )
 
 # list of pipes
 PIPES_LIST = (
-    "assets/sprites/pipe-green.png",
-    "assets/sprites/pipe-red.png",
+    str(SPRITES_PATH / "pipe-green.png"),
+    str(SPRITES_PATH / "pipe-red.png"),
 )
 
 
 def load():
     # path of player with different states
     PLAYER_PATH = (
-        "assets/sprites/redbird-upflap.png",
-        "assets/sprites/redbird-midflap.png",
-        "assets/sprites/redbird-downflap.png",
+        str(SPRITES_PATH / "redbird-upflap.png"),
+        str(SPRITES_PATH / "redbird-midflap.png"),
+        str(SPRITES_PATH / "redbird-downflap.png"),
     )
 
     # path of pipe
-    PIPE_PATH = "assets/sprites/pipe-green.png"
+    PIPE_PATH = str(SPRITES_PATH / "pipe-green.png")
 
     IMAGES, HITMASKS = {}, {}
 
     # numbers sprites for score display
     IMAGES["numbers"] = (
-        pygame.image.load("assets/sprites/0.png").convert_alpha(),
-        pygame.image.load("assets/sprites/1.png").convert_alpha(),
-        pygame.image.load("assets/sprites/2.png").convert_alpha(),
-        pygame.image.load("assets/sprites/3.png").convert_alpha(),
-        pygame.image.load("assets/sprites/4.png").convert_alpha(),
-        pygame.image.load("assets/sprites/5.png").convert_alpha(),
-        pygame.image.load("assets/sprites/6.png").convert_alpha(),
-        pygame.image.load("assets/sprites/7.png").convert_alpha(),
-        pygame.image.load("assets/sprites/8.png").convert_alpha(),
-        pygame.image.load("assets/sprites/9.png").convert_alpha(),
+        pygame.image.load(SPRITES_PATH / "0.png").convert_alpha(),
+        pygame.image.load(SPRITES_PATH / "1.png").convert_alpha(),
+        pygame.image.load(SPRITES_PATH / "2.png").convert_alpha(),
+        pygame.image.load(SPRITES_PATH / "3.png").convert_alpha(),
+        pygame.image.load(SPRITES_PATH / "4.png").convert_alpha(),
+        pygame.image.load(SPRITES_PATH / "5.png").convert_alpha(),
+        pygame.image.load(SPRITES_PATH / "6.png").convert_alpha(),
+        pygame.image.load(SPRITES_PATH / "7.png").convert_alpha(),
+        pygame.image.load(SPRITES_PATH / "8.png").convert_alpha(),
+        pygame.image.load(SPRITES_PATH / "9.png").convert_alpha(),
     )
 
     # base (ground) sprite
-    IMAGES["base"] = pygame.image.load("assets/sprites/base.png").convert_alpha()
+    IMAGES["base"] = pygame.image.load(SPRITES_PATH / "base.png").convert_alpha()
 
     # select random background sprites
     randBg = random.randint(0, len(BACKGROUNDS_LIST) - 1)
