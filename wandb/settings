@@ -1,0 +1,5 @@
+[default]
+entity = shatunov868-mipt
+project = ml-homework-6
+base_url = https://api.wandb.ai
+
