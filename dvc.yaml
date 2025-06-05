@@ -1,0 +1,14 @@
+stages:
+  train:
+    cmd: make train
+    deps:
+      - src/train.py
+    outs:
+      - model/lappy_fixed_ep_1000.pth
+  inference:
+    cmd: make inference
+    deps:
+      - src/inference.py
+      - model/lappy_fixed_ep_1000.pth
+    outs:
+      - videos/inference.mp4
