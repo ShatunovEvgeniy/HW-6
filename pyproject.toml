@@ -46,6 +46,8 @@ omit = [
     "**/sandbox.py",
     "**/logger.py",
     "**/game/*.py",
+    "**/inference.py",
+    "**/app.py",
 ]
 
 [tool.coverage.report]
