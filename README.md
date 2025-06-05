@@ -171,7 +171,7 @@ https://drive.google.com/drive/folders/1IU2RLIt_g0qP6YZcIFWFVuYve1ES6YSO?usp=sha
 
 # Отчёт о модели
 Демонстрацию работы модели можно посмотреть в папке video.
-Графики обучения: ?.
+Графики обучения: https://api.wandb.ai/links/shatunov868-mipt/v69tapy7.
 # Структура проекта
 
 ```
