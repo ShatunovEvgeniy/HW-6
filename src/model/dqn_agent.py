@@ -6,6 +6,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 from collections import deque
 
+from src.model.hparams import config
 from src.utils.device import setup_device
 
 # Set device for computation
@@ -33,19 +34,19 @@ class DQNAgent:
     def __init__(self, state_size, action_size):
         self.state_size = state_size
         self.action_size = action_size
-        self.memory = deque(maxlen=20000)
-        self.gamma = 0.99  # discount factor
-        self.epsilon = 1.0  # exploration rate
-        self.epsilon_min = 0.01
-        self.epsilon_decay = 0.995
-        self.learning_rate = 0.0005
+        self.memory = deque(maxlen=config["deque_maxlen"])
+        self.gamma = config["gamma"]  # discount factor
+        self.epsilon = 1  # exploration rate
+        self.epsilon_min = config["epsilon_min"]
+        self.epsilon_decay = config["epsilon_decay"]
+        self.learning_rate = config["learning_rate"]
         self.model = DQN(state_size, action_size).to(device)
         self.target_model = DQN(state_size, action_size).to(device)
         self.target_model.load_state_dict(self.model.state_dict())
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
         self.loss_fn = nn.MSELoss()
-        self.batch_size = 64
-        self.update_target_freq = 1000
+        self.batch_size = config["batch_size"]
+        self.update_target_freq = config["update_target_freq"]
         self.step_count = 0
 
     def act(self, state):
