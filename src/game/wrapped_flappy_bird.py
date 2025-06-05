@@ -1,5 +1,6 @@
 import random
 from itertools import cycle
+import numpy as np
 
 import pygame
 
@@ -8,6 +9,7 @@ import src.game.flappy_bird_utils as flappy_bird_utils
 FPS = 30
 SCREENWIDTH = 288
 SCREENHEIGHT = 512
+BIRD_X = int(SCREENWIDTH * 0.2)
 
 pygame.init()
 FPSCLOCK = pygame.time.Clock()
@@ -30,7 +32,7 @@ PLAYER_INDEX_GEN = cycle([0, 1, 2, 1])
 class GameState:
     def __init__(self):
         self.score = self.playerIndex = self.loopIter = 0
-        self.playerx = int(SCREENWIDTH * 0.2)
+        self.playerx = BIRD_X
         self.playery = int((SCREENHEIGHT - PLAYER_HEIGHT) / 2)
         self.basex = 0
         self.baseShift = IMAGES["base"].get_width() - BACKGROUND_WIDTH
@@ -143,11 +145,36 @@ class GameState:
         SCREEN.blit(playerSurface, (self.playerx, self.playery))
 
         image_data = pygame.surfarray.array3d(pygame.display.get_surface())
+        showScore(self.score)
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
         return image_data, reward, terminal
 
+    def get_state(self):
+        """State representation"""
+        # Calculate critical positions
+        bird_y_center = self.playery + PLAYER_HEIGHT / 2
+        next_pipe = self.upperPipes[0]
+        pipe_x_diff = next_pipe["x"] - self.playerx
+        gap_top = next_pipe["y"] + PIPE_HEIGHT
+        gap_y_center = gap_top + PIPEGAPSIZE / 2
+
+        # Calculate distances to pipe entry
+        dist_to_pipe_entry = max(0, pipe_x_diff - PIPE_WIDTH)
+        return np.array([
+            self.playery / SCREENHEIGHT,  # Normalized Y-position
+            self.playerVelY / self.playerMaxVelY,  # Normalized velocity
+            bird_y_center / SCREENHEIGHT,  # Bird center position
+
+            # Pipe entry information
+            dist_to_pipe_entry / SCREENWIDTH,  # Distance to pipe entry
+            (gap_y_center - bird_y_center) / SCREENHEIGHT,  # Vertical offset to gap center
+
+            # Boundary awareness
+            self.playery / SCREENHEIGHT,  # Distance to top (penalize being too high)
+            (BASEY - (self.playery + PLAYER_HEIGHT)) / SCREENHEIGHT,  # Distance to ground
+        ])
 
 def getRandomPipe():
     """returns a randomly generated pipe"""
